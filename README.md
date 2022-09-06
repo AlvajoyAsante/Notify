@@ -6,7 +6,7 @@
 Visit the Notify documentation for information on setting up Notify with the [CE C Toolchain](https://github.com/CE-Programming/toolchain) and information about its functions.
 
 ## Features
-- **Notification System.**
+- **Notification System**
   - Display different messages between programs.
   - Different Rendering techniques included.  
   - ...
