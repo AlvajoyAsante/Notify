@@ -34,41 +34,6 @@ int notify_Create(gfx_sprite_t *icon, char title[9], char text[30])
 	notify_Save();
 }
 
-void notify_SetColor(uint8_t outline, uint8_t fill, uint8_t index)
-{
-	struct notify_t *curr_index;
-
-	notify_Load();
-	
-	if (index <= notify_amount){
-		curr_index = &notify[index];
-		
-		curr_index->outline_index = outline;
-		curr_index->fill_index = fill;
-	} else {
-		return;
-	}
-	
-	notify_Save();
-}
-
-void notify_SetTextColor(uint8_t fg, uint8_t bg, uint8_t index)
-{
-	struct notify_t *curr_index;
-
-	notify_Load();
-	
-	if (index <= notify_amount){
-		curr_index = &notify[index];
-		curr_index->fg_index = bg;
-		curr_index->bg_index = fg;
-	} else {
-		return;
-	}
-	
-	notify_Save();
-}
-
 // Deleting notifications.
 void notify_Delete(uint8_t index)
 {
@@ -151,175 +116,83 @@ void notify_Alert(void)
 	struct notify_t *curr_notify;
 	uint8_t xprint;
 	uint16_t yprint = 15;
-	uint8_t fill, outline, fg, bg;
 	
-	if (!notify_amount) return;
-		
-	index = notify_amount - 1;
+	if (!notify_amount) {
+		return;
+	}else{
+		index = notify_amount - 1;
+	}
 
 	notify_Load();
 	
 	curr_notify = &notify[index];
 
-	// setup outline and fill colors
-	outline = curr_notify->outline_index;
-	fill = curr_notify->fill_index;
-
-	// setup text colors
-	fg = curr_notify->fg_index;
-	bg = curr_notify->bg_index;
-
-	gfx_SetColor(outline);
+	gfx_SetColor(0);
 	
 	if (curr_notify->icon != NULL){
 		xprint = (320 - 205)/2;
-		/* Print area */ 
 		oxy_FillRoundRectangle(xprint, yprint, 205, 40, 0);
 		
-		/* Print Icon box */
-		gfx_SetColor(fill);
+		gfx_SetColor(255);
 		oxy_FillRoundRectangle(xprint, yprint + 1, 38, 38, 0);
 		
-		/* place title name here */
-		gfx_SetColor(fill);
+		/* place prog name here */
+		gfx_SetColor(10);
 		oxy_FillRoundRectangle(xprint + 40, yprint + 1, 163, 14, 0);
 		
-		gfx_SetTextFGColor(fg);
-		gfx_SetTextBGColor(bg);
+		gfx_SetTextFGColor(255);
+		gfx_SetTextBGColor(10);
 	
 		if (curr_notify->title[0] != '\0'){
 			gfx_PrintStringXY(curr_notify->title, 102, 19);
 		}
 		
 		/* place text here */ 
-		gfx_SetColor(fill);
+		gfx_SetColor(255);
 		oxy_FillRoundRectangle(101, 31, 163, 23, 0);
 		
-		gfx_SetTextFGColor(fg);
-		gfx_SetTextBGColor(bg);
+		gfx_SetTextFGColor(0);
+		gfx_SetTextBGColor(255);
 		
 		if (curr_notify->text[0] != '\0'){
 			gfx_PrintStringXY(curr_notify->text, 102, yprint + 18);
 		}
 
-	}else{ //  Print notification without a icon to display.
+	}else{
 
 		xprint = (320 - 165)/2;
 		oxy_FillRoundRectangle(xprint, yprint, 165, 40, 0);
 		
-		/* place title here */ 
-		gfx_SetColor(fill);
+		/* place prog name here */ 
+		gfx_SetColor(10);
 		oxy_FillRoundRectangle(xprint + 1, yprint + 1, 163, 14, 0);
 		
-		gfx_SetTextFGColor(fg);
-		gfx_SetTextBGColor(bg);
+		gfx_SetTextFGColor(255);
+		gfx_SetTextBGColor(10);
 	
 		if (curr_notify->title[0] != '\0'){
 			gfx_PrintStringXY(curr_notify->title, xprint + 2, yprint + 3);
 		}
 		
 		/* place text here */ 
-		gfx_SetColor(fill);
+		gfx_SetColor(255);
 		oxy_FillRoundRectangle(xprint + 1, yprint + 16, 163, 23, 0);
 		
-		gfx_SetTextFGColor(fg);
-		gfx_SetTextBGColor(bg);
+		gfx_SetTextFGColor(0);
+		gfx_SetTextBGColor(255);
 		
 		if (curr_notify->text[0] != '\0'){
 			gfx_PrintStringXY(curr_notify->text, xprint + 2, yprint + 18);
 		}
 	}
-		
+	
+	while (!os_GetCSC());
+	
 	notify_Delete(index);
-}
-
-void notify_Render(int x, int y, uint8_t index)
-{
-	struct notify_t *curr_notify;
-	uint8_t xprint = x;
-	uint16_t yprint = y;
-
-	uint8_t fill, outline, fg, bg;
-
-	if (!notify_amount && !(index <= notify_amount)) return;
-
-	notify_Load();
-	
-	curr_notify = &notify[index];
-	
-	// setup outline and fill colors
-	outline = curr_notify->outline_index;
-	fill = curr_notify->fill_index;
-
-	// setup text colors
-	fg = curr_notify->fg_index;
-	bg = curr_notify->bg_index;
-
-	gfx_SetColor(outline);
-	
-	// Is there a icon to display
-	if (curr_notify->icon != NULL){
-		xprint = (320 - 205)/2;
-		/* Print area */ 
-		oxy_FillRoundRectangle(xprint, yprint, 205, 40, 0);
-		
-		/* Print Icon box */
-		gfx_SetColor(fill);
-		oxy_FillRoundRectangle(xprint, yprint + 1, 38, 38, 0);
-		
-		/* place title name here */
-		gfx_SetColor(fill);
-		oxy_FillRoundRectangle(xprint + 40, yprint + 1, 163, 14, 0);
-		
-		gfx_SetTextFGColor(fg);
-		gfx_SetTextBGColor(bg);
-	
-		if (curr_notify->title[0] != '\0'){
-			gfx_PrintStringXY(curr_notify->title, 102, 19);
-		}
-		
-		/* place text here */ 
-		gfx_SetColor(fill);
-		oxy_FillRoundRectangle(101, 31, 163, 23, 0);
-		
-		gfx_SetTextFGColor(fg);
-		gfx_SetTextBGColor(bg);
-		
-		if (curr_notify->text[0] != '\0'){
-			gfx_PrintStringXY(curr_notify->text, 102, yprint + 18);
-		}
-
-	}else{ //  Print notification without a icon to display.
-
-		xprint = (320 - 165)/2;
-		oxy_FillRoundRectangle(xprint, yprint, 165, 40, 0);
-		
-		/* place title here */ 
-		gfx_SetColor(fill);
-		oxy_FillRoundRectangle(xprint + 1, yprint + 1, 163, 14, 0);
-		
-		gfx_SetTextFGColor(fg);
-		gfx_SetTextBGColor(bg);
-	
-		if (curr_notify->title[0] != '\0'){
-			gfx_PrintStringXY(curr_notify->title, xprint + 2, yprint + 3);
-		}
-		
-		/* place text here */ 
-		gfx_SetColor(fill);
-		oxy_FillRoundRectangle(xprint + 1, yprint + 16, 163, 23, 0);
-		
-		gfx_SetTextFGColor(fg);
-		gfx_SetTextBGColor(bg);
-		
-		if (curr_notify->text[0] != '\0'){
-			gfx_PrintStringXY(curr_notify->text, xprint + 2, yprint + 18);
-		}
-	}
 }
 
 // Displays the notification tray. 
 void notify_Tray(void)
 {
-	// in the process of creating.
+	
 }

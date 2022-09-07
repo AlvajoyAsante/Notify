@@ -5,22 +5,22 @@
 	public ___icon
 ___icon:
 	db	$10, $10
-	db	$FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF
-	db	$FF, $FF, $FF, $00, $00, $38, $38, $38, $38, $38, $38, $00, $00, $FF, $FF, $FF
-	db	$FF, $FF, $00, $38, $38, $1C, $1C, $1C, $1C, $1C, $1C, $38, $38, $00, $FF, $FF
-	db	$FF, $00, $38, $38, $1C, $1C, $1F, $1F, $1F, $1F, $1C, $1C, $38, $38, $00, $FF
-	db	$FF, $00, $38, $1C, $1F, $1F, $FF, $FF, $FF, $FF, $1F, $1F, $1C, $38, $00, $FF
-	db	$00, $38, $1C, $1C, $1F, $FF, $FF, $FF, $FF, $FF, $FF, $1F, $1C, $1C, $38, $00
-	db	$00, $38, $1C, $1F, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $1F, $1C, $38, $00
-	db	$00, $38, $1C, $1F, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $1F, $1C, $38, $00
-	db	$00, $38, $1C, $1F, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $1F, $1C, $38, $00
-	db	$00, $38, $1C, $1F, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $1F, $1C, $38, $00
-	db	$00, $38, $1C, $1C, $1F, $FF, $FF, $FF, $FF, $FF, $FF, $1F, $1C, $1C, $38, $00
-	db	$FF, $00, $38, $1C, $1F, $1F, $FF, $FF, $FF, $FF, $1F, $1F, $1C, $38, $00, $FF
-	db	$FF, $00, $38, $38, $1C, $1C, $1F, $1F, $1F, $1F, $1C, $1C, $38, $38, $00, $FF
-	db	$FF, $FF, $00, $38, $38, $1C, $1C, $1C, $1C, $1C, $1C, $38, $38, $00, $FF, $FF
-	db	$FF, $FF, $FF, $00, $00, $38, $38, $38, $38, $38, $38, $00, $00, $FF, $FF, $FF
-	db	$FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $FF, $FF, $FF, $FF, $FF
+	db	$00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db	$00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00
+	db	$00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00
+	db	$00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00
+	db	$00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00
+	db	$00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00
+	db	$00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00
+	db	$00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00
+	db	$00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00
+	db	$00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00
+	db	$00, $00, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $FF, $00, $00
+	db	$00, $00, $00, $FF, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00
+	db	$00, $00, $00, $FF, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db	$00, $00, $00, $FF, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db	$00, $00, $00, $FF, $FF, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db	$00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	public ___description
 ___description:
 	db	"Oxygen Demo", 0

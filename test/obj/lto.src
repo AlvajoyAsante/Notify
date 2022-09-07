@@ -80,6 +80,62 @@ BB1_2:
 	section	.text,"ax",@progbits
 
 	section	.text,"ax",@progbits
+	public	_notify_SetColor
+_notify_SetColor:
+	call	__frameset0
+	call	_notify_Load
+	ld	c, (ix + 12)
+	ld	a, (_notify_amount)
+	cp	a, c
+	jr	c, BB2_2
+	ld	a, (ix + 6)
+	ld	e, (ix + 9)
+	or	a, a
+	sbc	hl, hl
+	ld	l, c
+	ld	iy, (_notify)
+	ld	bc, 46
+	call	__imulu
+	push	hl
+	pop	bc
+	add	iy, bc
+	ld	(iy + 42), a
+	ld	(iy + 43), e
+	call	_notify_Save
+BB2_2:
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_notify_SetTextColor
+_notify_SetTextColor:
+	call	__frameset0
+	call	_notify_Load
+	ld	c, (ix + 12)
+	ld	a, (_notify_amount)
+	cp	a, c
+	jr	c, BB3_2
+	ld	a, (ix + 6)
+	ld	e, (ix + 9)
+	or	a, a
+	sbc	hl, hl
+	ld	l, c
+	ld	iy, (_notify)
+	ld	bc, 46
+	call	__imulu
+	push	hl
+	pop	bc
+	add	iy, bc
+	ld	(iy + 44), e
+	ld	(iy + 45), a
+	call	_notify_Save
+BB3_2:
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
 	public	_notify_Delete
 _notify_Delete:
 	ld	hl, -6
@@ -90,7 +146,7 @@ _notify_Delete:
 	ld	a, (_notify_amount)
 	ld	e, a
 	or	a, a
-	jr	z, BB2_2
+	jr	z, BB4_2
 	dec	e
 	ld	a, e
 	ld	(_notify_amount), a
@@ -127,7 +183,7 @@ _notify_Delete:
 	pop	de
 	pop	de
 	ld	(_notify), hl
-BB2_2:
+BB4_2:
 	ld	sp, ix
 	pop	ix
 	jp	_notify_Save
@@ -152,36 +208,45 @@ _notify_DeleteAll:
 	section	.text,"ax",@progbits
 	public	_notify_Alert
 _notify_Alert:
-	ld	hl, -6
+	ld	hl, -12
 	call	__frameset
 	ld	a, (_notify_amount)
 	ld	l, a
 	or	a, a
-	jp	z, BB4_11
+	jp	z, BB6_9
 	ld	de, 0
 	ld	e, l
 	dec	de
 	ld	(ix - 3), de
 	call	_notify_Load
-	ld	hl, (_notify)
-	ld	(ix - 6), hl
-	or	a, a
-	sbc	hl, hl
-	push	hl
-	call	_gfx_SetColor
-	pop	hl
+	ld	de, (_notify)
 	ld	bc, 46
 	ld	hl, (ix - 3)
 	call	__imulu
 	push	hl
-	pop	de
-	ld	hl, (ix - 6)
-	add	hl, de
+	pop	bc
+	ld	(ix - 7), de
+	push	de
+	pop	iy
+	add	iy, bc
+	ld	(ix - 12), iy
+	ld	a, (iy + 42)
+	ld	l, (iy + 43)
+	ld	(ix - 4), l
+	ld	l, (iy + 44)
+	ld	(ix - 9), l
+	ld	l, (iy + 45)
+	ld	(ix - 8), l
+	ld	l, a
+	push	hl
+	call	_gfx_SetColor
+	pop	hl
+	ld	hl, (ix - 12)
 	ld	hl, (hl)
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	nz, BB4_5
+	jp	nz, BB6_5
 	ld	hl, 165
 	ld	de, 40
 	push	de
@@ -195,7 +260,8 @@ _notify_Alert:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, 10
+	ld	a, (ix - 4)
+	ld	l, a
 	push	hl
 	call	_gfx_SetColor
 	pop	hl
@@ -212,12 +278,13 @@ _notify_Alert:
 	pop	hl
 	pop	hl
 	pop	hl
-	scf
-	sbc	hl, hl
+	ld	a, (ix - 9)
+	ld	l, a
 	push	hl
 	call	_gfx_SetTextFGColor
 	pop	hl
-	ld	hl, 10
+	ld	a, (ix - 8)
+	ld	l, a
 	push	hl
 	call	_gfx_SetTextBGColor
 	pop	hl
@@ -226,11 +293,11 @@ _notify_Alert:
 	call	__imulu
 	push	hl
 	pop	de
-	ld	iy, (ix - 6)
+	ld	iy, (ix - 7)
 	add	iy, de
 	ld	a, (iy + 3)
 	or	a, a
-	jr	z, BB4_4
+	jr	z, BB6_4
 	ld	hl, 18
 	push	hl
 	ld	hl, 79
@@ -240,9 +307,9 @@ _notify_Alert:
 	pop	hl
 	pop	hl
 	pop	hl
-BB4_4:
-	scf
-	sbc	hl, hl
+BB6_4:
+	ld	a, (ix - 4)
+	ld	l, a
 	push	hl
 	call	_gfx_SetColor
 	pop	hl
@@ -259,13 +326,13 @@ BB4_4:
 	pop	hl
 	pop	hl
 	pop	hl
-	or	a, a
-	sbc	hl, hl
+	ld	a, (ix - 9)
+	ld	l, a
 	push	hl
 	call	_gfx_SetTextFGColor
 	pop	hl
-	scf
-	sbc	hl, hl
+	ld	a, (ix - 8)
+	ld	l, a
 	push	hl
 	call	_gfx_SetTextBGColor
 	pop	hl
@@ -274,15 +341,15 @@ BB4_4:
 	call	__imulu
 	push	hl
 	pop	de
-	ld	iy, (ix - 6)
+	ld	iy, (ix - 7)
 	add	iy, de
 	ld	a, (iy + 12)
 	or	a, a
 	ld	hl, 33
 	push	hl
 	ld	hl, 79
-	jp	BB4_8
-BB4_5:
+	jp	BB6_8
+BB6_5:
 	ld	hl, 205
 	ld	de, 40
 	push	de
@@ -296,8 +363,8 @@ BB4_5:
 	pop	hl
 	pop	hl
 	pop	hl
-	scf
-	sbc	hl, hl
+	ld	a, (ix - 4)
+	ld	l, a
 	push	hl
 	call	_gfx_SetColor
 	pop	hl
@@ -313,7 +380,8 @@ BB4_5:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	hl, 10
+	ld	a, (ix - 4)
+	ld	l, a
 	push	hl
 	call	_gfx_SetColor
 	pop	hl
@@ -330,12 +398,13 @@ BB4_5:
 	pop	hl
 	pop	hl
 	pop	hl
-	scf
-	sbc	hl, hl
+	ld	a, (ix - 9)
+	ld	l, a
 	push	hl
 	call	_gfx_SetTextFGColor
 	pop	hl
-	ld	hl, 10
+	ld	a, (ix - 8)
+	ld	l, a
 	push	hl
 	call	_gfx_SetTextBGColor
 	pop	hl
@@ -344,11 +413,11 @@ BB4_5:
 	call	__imulu
 	push	hl
 	pop	de
-	ld	iy, (ix - 6)
+	ld	iy, (ix - 7)
 	add	iy, de
 	ld	a, (iy + 3)
 	or	a, a
-	jr	z, BB4_7
+	jr	z, BB6_7
 	ld	hl, 19
 	push	hl
 	ld	hl, 102
@@ -358,9 +427,9 @@ BB4_5:
 	pop	hl
 	pop	hl
 	pop	hl
-BB4_7:
-	scf
-	sbc	hl, hl
+BB6_7:
+	ld	a, (ix - 4)
+	ld	l, a
 	push	hl
 	call	_gfx_SetColor
 	pop	hl
@@ -377,13 +446,13 @@ BB4_7:
 	pop	hl
 	pop	hl
 	pop	hl
-	or	a, a
-	sbc	hl, hl
+	ld	a, (ix - 9)
+	ld	l, a
 	push	hl
 	call	_gfx_SetTextFGColor
 	pop	hl
-	scf
-	sbc	hl, hl
+	ld	a, (ix - 8)
+	ld	l, a
 	push	hl
 	call	_gfx_SetTextBGColor
 	pop	hl
@@ -392,29 +461,25 @@ BB4_7:
 	call	__imulu
 	push	hl
 	pop	de
-	ld	iy, (ix - 6)
+	ld	iy, (ix - 7)
 	add	iy, de
 	ld	a, (iy + 12)
 	or	a, a
 	ld	hl, 33
 	push	hl
 	ld	hl, 102
-BB4_8:
+BB6_8:
 	push	hl
 	pea	iy + 12
 	call	nz, _gfx_PrintStringXY
 	pop	hl
 	pop	hl
 	pop	hl
-BB4_9:
-	call	_os_GetCSC
-	or	a, a
-	jr	z, BB4_9
 	ld	hl, (ix - 3)
 	push	hl
 	call	_notify_Delete
 	pop	hl
-BB4_11:
+BB6_9:
 	ld	sp, ix
 	pop	ix
 	ret
@@ -453,10 +518,10 @@ _oxy_FillRoundRectangle:
 	call	pe, __setflag
 	push	de
 	pop	iy
-	jp	p, BB5_2
+	jp	p, BB7_2
 	push	bc
 	pop	iy
-BB5_2:
+BB7_2:
 	dec	de
 	ld	(ix - 21), de
 	ld	hl, (ix - 3)
@@ -467,11 +532,11 @@ BB5_2:
 	ld	hl, (ix - 6)
 	inc	hl
 	ld	(ix - 18), hl
-BB5_3:
+BB7_3:
 	lea	hl, iy
 	or	a, a
 	sbc	hl, bc
-	jr	z, BB5_9
+	jr	z, BB7_9
 	ld	(ix - 12), iy
 	ld	iy, (ix - 3)
 	add	iy, bc
@@ -481,21 +546,21 @@ BB5_3:
 	or	a, a
 	sbc	hl, bc
 	ld	(ix - 9), bc
-	jr	z, BB5_6
+	jr	z, BB7_6
 	ld	hl, (ix - 21)
 	or	a, a
 	sbc	hl, bc
-	jr	nz, BB5_7
-BB5_6:
+	jr	nz, BB7_7
+BB7_6:
 	ld	hl, (ix - 15)
 	push	hl
 	ld	hl, (ix - 18)
-	jr	BB5_8
-BB5_7:
+	jr	BB7_8
+BB7_7:
 	ld	hl, (ix - 24)
 	push	hl
 	ld	hl, (ix - 6)
-BB5_8:
+BB7_8:
 	push	hl
 	push	iy
 	call	_gfx_VertLine
@@ -505,8 +570,311 @@ BB5_8:
 	ld	bc, (ix - 9)
 	inc	bc
 	ld	iy, (ix - 12)
-	jr	BB5_3
-BB5_9:
+	jr	BB7_3
+BB7_9:
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_notify_Render
+_notify_Render:
+	ld	hl, -15
+	call	__frameset
+	ld	a, (_notify_amount)
+	ld	l, a
+	ld	a, (ix + 12)
+	or	a, a
+	jr	z, BB8_2
+	ld	a, l
+	or	a, a
+	jp	z, BB8_12
+BB8_2:
+	call	_notify_Load
+	ld	de, (_notify)
+	or	a, a
+	sbc	hl, hl
+	ld	a, (ix + 12)
+	ld	l, a
+	ld	bc, 46
+	ld	(ix - 7), hl
+	call	__imulu
+	push	hl
+	pop	bc
+	ld	(ix - 4), de
+	push	de
+	pop	iy
+	add	iy, bc
+	ld	(ix - 12), iy
+	ld	a, (iy + 42)
+	ld	l, (iy + 43)
+	ld	(ix - 1), l
+	ld	l, (iy + 44)
+	ld	(ix - 9), l
+	ld	l, (iy + 45)
+	ld	(ix - 8), l
+	ld	l, a
+	push	hl
+	call	_gfx_SetColor
+	pop	hl
+	ld	hl, (ix - 12)
+	ld	hl, (hl)
+	add	hl, bc
+	or	a, a
+	sbc	hl, bc
+	jp	nz, BB8_7
+	ld	hl, 165
+	ld	de, 40
+	push	de
+	push	hl
+	ld	hl, (ix + 9)
+	push	hl
+	ld	hl, 77
+	push	hl
+	call	_oxy_FillRoundRectangle
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	a, (ix - 1)
+	ld	l, a
+	push	hl
+	call	_gfx_SetColor
+	pop	hl
+	ld	hl, (ix + 9)
+	ld	bc, 65535
+	call	__iand
+	ld	(ix - 12), hl
+	ld	hl, (ix + 9)
+	inc	l
+	ld	de, 14
+	push	de
+	ld	de, 163
+	push	de
+	push	hl
+	ld	hl, 78
+	push	hl
+	call	_oxy_FillRoundRectangle
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	a, (ix - 9)
+	ld	l, a
+	push	hl
+	call	_gfx_SetTextFGColor
+	pop	hl
+	ld	a, (ix - 8)
+	ld	l, a
+	push	hl
+	call	_gfx_SetTextBGColor
+	pop	hl
+	ld	bc, 46
+	ld	hl, (ix - 7)
+	call	__imulu
+	push	hl
+	pop	de
+	ld	iy, (ix - 4)
+	add	iy, de
+	ld	a, (iy + 3)
+	or	a, a
+	jr	z, BB8_5
+	ld	de, 3
+	ld	hl, (ix - 12)
+	add	hl, de
+	push	hl
+	ld	hl, 79
+	push	hl
+	pea	iy + 3
+	call	_gfx_PrintStringXY
+	pop	hl
+	pop	hl
+	pop	hl
+BB8_5:
+	ld	a, (ix - 1)
+	ld	l, a
+	push	hl
+	call	_gfx_SetColor
+	pop	hl
+	ld	hl, (ix + 9)
+	ld	a, l
+	add	a, 16
+	ld	l, a
+	ld	de, 23
+	push	de
+	ld	de, 163
+	push	de
+	push	hl
+	ld	hl, 78
+	push	hl
+	call	_oxy_FillRoundRectangle
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	a, (ix - 9)
+	ld	l, a
+	push	hl
+	call	_gfx_SetTextFGColor
+	pop	hl
+	ld	a, (ix - 8)
+	ld	l, a
+	push	hl
+	call	_gfx_SetTextBGColor
+	pop	hl
+	ld	bc, 46
+	ld	hl, (ix - 7)
+	call	__imulu
+	push	hl
+	pop	de
+	ld	iy, (ix - 4)
+	add	iy, de
+	ld	a, (iy + 12)
+	or	a, a
+	jp	z, BB8_12
+	ld	de, 18
+	ld	hl, (ix - 12)
+	add	hl, de
+	push	hl
+	ld	hl, 79
+	jp	BB8_11
+BB8_7:
+	ld	hl, 205
+	ld	de, 40
+	push	de
+	push	hl
+	ld	hl, (ix + 9)
+	push	hl
+	ld	hl, 57
+	push	hl
+	call	_oxy_FillRoundRectangle
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	a, (ix - 1)
+	ld	l, a
+	push	hl
+	call	_gfx_SetColor
+	pop	hl
+	ld	hl, (ix + 9)
+	ld	bc, 65535
+	call	__iand
+	ld	(ix - 15), hl
+	ld	hl, (ix + 9)
+	inc	l
+	ld	(ix - 12), hl
+	ld	de, 38
+	push	de
+	push	de
+	push	hl
+	ld	hl, 57
+	push	hl
+	call	_oxy_FillRoundRectangle
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	a, (ix - 1)
+	ld	l, a
+	push	hl
+	call	_gfx_SetColor
+	pop	hl
+	ld	hl, 14
+	push	hl
+	ld	hl, 163
+	push	hl
+	ld	hl, (ix - 12)
+	push	hl
+	ld	hl, 97
+	push	hl
+	call	_oxy_FillRoundRectangle
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	a, (ix - 9)
+	ld	l, a
+	push	hl
+	call	_gfx_SetTextFGColor
+	pop	hl
+	ld	a, (ix - 8)
+	ld	l, a
+	push	hl
+	call	_gfx_SetTextBGColor
+	pop	hl
+	ld	bc, 46
+	ld	hl, (ix - 7)
+	call	__imulu
+	push	hl
+	pop	de
+	ld	iy, (ix - 4)
+	add	iy, de
+	ld	a, (iy + 3)
+	or	a, a
+	jr	z, BB8_9
+	ld	hl, 19
+	push	hl
+	ld	hl, 102
+	push	hl
+	pea	iy + 3
+	call	_gfx_PrintStringXY
+	pop	hl
+	pop	hl
+	pop	hl
+BB8_9:
+	ld	a, (ix - 1)
+	ld	l, a
+	push	hl
+	call	_gfx_SetColor
+	pop	hl
+	ld	hl, 23
+	push	hl
+	ld	hl, 163
+	push	hl
+	ld	hl, 31
+	push	hl
+	ld	hl, 101
+	push	hl
+	call	_oxy_FillRoundRectangle
+	pop	hl
+	pop	hl
+	pop	hl
+	pop	hl
+	ld	a, (ix - 9)
+	ld	l, a
+	push	hl
+	call	_gfx_SetTextFGColor
+	pop	hl
+	ld	a, (ix - 8)
+	ld	l, a
+	push	hl
+	call	_gfx_SetTextBGColor
+	pop	hl
+	ld	bc, 46
+	ld	hl, (ix - 7)
+	call	__imulu
+	push	hl
+	pop	de
+	ld	iy, (ix - 4)
+	add	iy, de
+	ld	a, (iy + 12)
+	or	a, a
+	jr	z, BB8_12
+	ld	de, 18
+	ld	hl, (ix - 15)
+	add	hl, de
+	push	hl
+	ld	hl, 102
+BB8_11:
+	push	hl
+	pea	iy + 12
+	call	_gfx_PrintStringXY
+	pop	hl
+	pop	hl
+	pop	hl
+BB8_12:
 	ld	sp, ix
 	pop	ix
 	ret
@@ -534,7 +902,7 @@ _notify_Load:
 	pop	hl
 	pop	hl
 	or	a, a
-	jp	z, BB7_5
+	jp	z, BB10_5
 	ld	hl, _NOTIFY_VERSION_COMPARE
 	ld	bc, 1
 	ld	(ix - 4), de
@@ -551,10 +919,10 @@ _notify_Load:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	z, BB7_3
+	jr	z, BB10_3
 	or	a, a
-	jr	nz, BB7_5
-BB7_3:
+	jr	nz, BB10_5
+BB10_3:
 	ld	hl, _notify_amount
 	ld	de, (ix - 4)
 	push	de
@@ -581,7 +949,7 @@ BB7_3:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	z, BB7_5
+	jr	z, BB10_5
 	ld	a, 1
 	ld	(ix - 1), a
 	ld	de, (ix - 4)
@@ -600,7 +968,7 @@ BB7_3:
 	push	hl
 	call	_ti_Close
 	pop	hl
-BB7_5:
+BB10_5:
 	ld	a, (ix - 1)
 	ld	sp, ix
 	pop	ix
@@ -728,11 +1096,12 @@ _.str.2:
 	extern	__setflag
 	extern	_gfx_VertLine
 	extern	_ti_SetArchiveStatus
+	extern	__iand
 	extern	__Unwind_SjLj_Unregister
 	extern	__imulu
-	extern	_ti_Open
 	extern	_gfx_SetColor
+	extern	_ti_Open
 	extern	_gfx_PrintStringXY
-	extern	_os_GetCSC
 	extern	_realloc
 	extern	_free
+	extern	__frameset0

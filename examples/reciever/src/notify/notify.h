@@ -63,19 +63,15 @@ void notify_Delete(uint8_t index);
 void notify_DeleteAll(void);
 
 /**
- * @brief Renders notification at the top of the notification stack.
+ * @brief This is the default function for displaying a notification,
+ * there is other ways to implement display notifications.
  */ 
 void notify_Alert(void);
 
 /**
- * @brief Renders a notification.
+ * @brief Displays all the notification in a graphical way.
  */ 
 void notify_Show(uint8_t index);
-
-/**
- * @brief Renders all the notification in a tray.
- */ 
-void notify_Tray(void);
 
 #ifdef __cplusplus
 }
