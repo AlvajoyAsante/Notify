@@ -1,0 +1,14 @@
+converts:
+  - name: sprites
+    palette: xlibc
+    images:
+      - chatbox.png
+
+outputs:
+  - type: c
+    include-file: gfx.h
+    palettes:
+      - xlibc
+    converts:
+      - sprites
+
