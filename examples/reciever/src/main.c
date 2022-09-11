@@ -2,7 +2,7 @@
  *--------------------------------------
  * Program Name: DEMOB
  * Author: Alvajoy 'Notify Demo Reciever' Asante
- * Description: Notify Demo Reciever
+ * Description: Notify Demo Reciever, The program displays the notification before closing.
  *--------------------------------------
 */
 
