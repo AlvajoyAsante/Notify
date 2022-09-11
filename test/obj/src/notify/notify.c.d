@@ -12,6 +12,6 @@ obj/src/notify/notify.c.bc: src\notify\notify.c src\notify\notify.h \
   C:\CEdev\include\ti\screen.h C:\CEdev\include\ti\ui.h \
   C:\CEdev\include\ti\tokens.h C:\CEdev\include\ti\vars.h \
   C:\CEdev\include\graphx.h C:\CEdev\include\stdlib.h \
-  src\notify\notify_save.h C:\CEdev\include\fileioc.h \
-  C:\CEdev\include\stdio.h C:\CEdev\include\stdarg.h \
-  C:\CEdev\include\string.h
+  src\notify\notify_core.h src\notify\notify_save.h \
+  C:\CEdev\include\fileioc.h C:\CEdev\include\stdio.h \
+  C:\CEdev\include\stdarg.h C:\CEdev\include\string.h

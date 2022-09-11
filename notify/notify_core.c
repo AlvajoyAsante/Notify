@@ -1,4 +1,4 @@
-#include "notify.h"
+#include "notify_core.h"
 #include "notify_save.h"
 
 struct notify_t *notify;

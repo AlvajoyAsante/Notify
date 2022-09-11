@@ -2,9 +2,9 @@
 # Makefile Options
 # ----------------------------
 
-NAME = DEMO
+NAME = DEMOA
 ICON = icon.png
-DESCRIPTION = "Oxygen Demo"
+DESCRIPTION = "Notify Demo Sender"
 COMPRESSED = YES
 ARCHIVED = NO
 

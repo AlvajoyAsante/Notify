@@ -1,8 +1,8 @@
 /*
  *--------------------------------------
- * Program Name: Demo
+ * Program Name: NTEST
  * Author: Alvajoy Asante
- * Description: Oxygen Demo
+ * Description: Notify test, This program makes sure that programs can compile with notify.
  *--------------------------------------
 */
 

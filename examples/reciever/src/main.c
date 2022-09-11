@@ -1,8 +1,8 @@
 /*
  *--------------------------------------
- * Program Name: Demo
+ * Program Name: DEMOB
  * Author: Alvajoy Asante
- * Description: Oxygen Demo
+ * Description: Notify Demo Reciever
  *--------------------------------------
 */
 

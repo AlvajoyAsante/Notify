@@ -1,5 +1,5 @@
-obj/src/notify/notify_save.c.bc: src\notify\notify_save.c \
-  src\notify\notify_save.h C:\CEdev\include\tice.h \
+obj/src/notify/notify_core.c.bc: src\notify\notify_core.c \
+  src\notify\notify_core.h C:\CEdev\include\tice.h \
   C:\CEdev\include\sys\basicusb.h C:\CEdev\include\stdbool.h \
   C:\CEdev\include\stdint.h C:\CEdev\include\cdefs.h \
   C:\CEdev\include\sys\lcd.h C:\CEdev\include\sys\power.h \
@@ -11,7 +11,7 @@ obj/src/notify/notify_save.c.bc: src\notify\notify_save.c \
   C:\CEdev\include\ti\real.h C:\CEdev\include\ti\info.h \
   C:\CEdev\include\ti\python.h C:\CEdev\include\ti\screen.h \
   C:\CEdev\include\ti\ui.h C:\CEdev\include\ti\tokens.h \
-  C:\CEdev\include\ti\vars.h C:\CEdev\include\fileioc.h \
-  C:\CEdev\include\stdlib.h C:\CEdev\include\stdio.h \
-  C:\CEdev\include\stdarg.h C:\CEdev\include\string.h \
-  src\notify\notify.h C:\CEdev\include\graphx.h src\notify\notify_core.h
+  C:\CEdev\include\ti\vars.h C:\CEdev\include\graphx.h \
+  C:\CEdev\include\stdlib.h src\notify\notify_save.h \
+  C:\CEdev\include\fileioc.h C:\CEdev\include\stdio.h \
+  C:\CEdev\include\stdarg.h C:\CEdev\include\string.h
