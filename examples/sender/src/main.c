@@ -1,7 +1,7 @@
 /*
  *--------------------------------------
  * Program Name: Demo
- * Author: Alvajoy Asante
+ * Author: Alvajoy 'Alvajoy123' Asante
  * Description: Oxygen Demo
  *--------------------------------------
 */

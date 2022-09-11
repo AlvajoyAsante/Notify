@@ -1,7 +1,7 @@
 /*
  *--------------------------------------
  * Program Name: DEMOB
- * Author: Alvajoy Asante
+ * Author: Alvajoy 'Notify Demo Reciever' Asante
  * Description: Notify Demo Reciever
  *--------------------------------------
 */
