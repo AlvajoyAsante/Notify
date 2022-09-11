@@ -1,7 +1,7 @@
 /*
  *--------------------------------------
  * Program Name: NTEST
- * Author: Alvajoy Asante
+ * Author: Alvajoy 'Alvajoy123' Asante
  * Description: Notify test, This program makes sure that programs can compile with notify.
  *--------------------------------------
 */
