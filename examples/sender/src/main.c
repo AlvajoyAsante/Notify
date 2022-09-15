@@ -37,5 +37,11 @@ int main(void)
     notify_SetColor(RED_INDEX, WHITE_INDEX, index);
     notify_SetTextColor(BLACK_INDEX, WHITE_INDEX, index);
 
+    /* Clear the homescreen */
+    os_ClrHome();
+
+    /* Print a string */
+    os_PutStrFull("Created Notify!");
+
     return 0;
 }
