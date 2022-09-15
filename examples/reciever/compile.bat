@@ -1,15 +1,17 @@
 :: Alvajoy "Alvajoy123" Asante
 :: Last updated: 9/5/2022
 :: This compiles the API into a folder and uses it to detect bugs of any sort.
-
 @echo off
-title Testing: Notify
+title Compiling 
 :start
 
 :: Deletes the old version so it does not conflit with the new version
 echo Deleting the old version of Notify from testing folder...
 rmdir /S/Q ".\src\notify"
-make clean
+
+echo Cleaning folder directories for compiling ...
+rmdir /S/Q ".\bin"
+rmdir /S/Q ".\obj"
 
 :: Clears the screen of any infomations displayed whiles deleting the folder.
 cls
@@ -17,7 +19,7 @@ cls
 :: Makes a folder named notify and copies all the source code into the hyra folder
 echo Copying the lastest version of Notify into testing folder...
 mkdir .\src\notify
-xcopy /y/s/i "..\notify" .\src\notify
+xcopy  /y/s/i "C:\Users\admin\Documents\TI Projects\2022\NOTIFY\SOURCE\notify" .\src\notify
 
 :: Clears the screen of any infomations displayed whiles create folder.
 cls

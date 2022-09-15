@@ -3,9 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**",
-                "C:/CEdev/include",
-                "C:/Users/admin/Documents/TI Projects/2021/OXYGEN/OXYGEN_SOURCE/test/src/oxygen"
+                "C:\\CEdev\\include"
             ],
             "defines": [
                 "_DEBUG",
@@ -13,8 +11,9 @@
                 "_UNICODE"
             ],
             "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "windows-msvc-x64"
+            "cppStandard": "c++14",
+            "intelliSenseMode": "linux-clang-x64",
+            "compilerPath": "C:\\CEdev\\bin\\ez80-clang.exe"
         }
     ],
     "version": 4

@@ -3,28 +3,77 @@
 	section	.text,"ax",@progbits
 	public	_main
 _main:
-	ld	hl, 0
-	ld	de, _.str
-	push	de
-	push	de
-	push	hl
-	call	_notify_Create
-	pop	hl
-	pop	hl
-	pop	hl
+	ld	hl, -3
+	call	__frameset
 	call	_gfx_Begin
+	ld	de, -1
+	ld	bc, 0
+BB0_1:
+	push	bc
+	pop	hl
+	or	a, a
+	sbc	hl, de
+	jr	z, BB0_6
+	scf
+	sbc	hl, hl
+	push	hl
+	call	_gfx_FillScreen
+	pop	hl
+	ld	hl, _.str
+	push	hl
+	call	_PrintCentered
+	pop	hl
 	ld	hl, -32
 	push	hl
 	call	_gfx_SetColor
 	pop	hl
 	call	_notify_Alert
-BB0_1:
+	ld	de, -1
+	push	hl
+	pop	bc
+	or	a, a
+	sbc	hl, de
+	jr	z, BB0_1
+	ld	(ix - 3), bc
+BB0_4:
 	call	_os_GetCSC
 	or	a, a
-	jr	z, BB0_1
+	jr	z, BB0_4
+	ld	de, -1
+	ld	bc, (ix - 3)
+	jr	BB0_1
+BB0_6:
 	call	_gfx_End
 	or	a, a
 	sbc	hl, hl
+	ld	sp, ix
+	pop	ix
+	ret
+	section	.text,"ax",@progbits
+
+	section	.text,"ax",@progbits
+	public	_PrintCentered
+_PrintCentered:
+	call	__frameset0
+	ld	hl, (ix + 6)
+	push	hl
+	call	_gfx_GetStringWidth
+	push	hl
+	pop	de
+	pop	hl
+	ld	hl, 320
+	or	a, a
+	sbc	hl, de
+	ld	c, 1
+	call	__ishru
+	ld	de, 116
+	push	de
+	push	hl
+	ld	hl, (ix + 6)
+	push	hl
+	call	_gfx_PrintStringXY
+	ld	sp, ix
+	pop	ix
 	ret
 	section	.text,"ax",@progbits
 
@@ -39,7 +88,7 @@ _notify_Create:
 	call	_notify_Load
 	ld	a, (_notify_amount)
 	cp	a, -1
-	jr	z, BB1_2
+	jr	z, BB2_2
 	ld	bc, 42
 	inc	a
 	ld	(_notify_amount), a
@@ -92,7 +141,7 @@ _notify_Create:
 	ld	hl, (ix + 6)
 	ld	iy, (ix - 6)
 	ld	(iy), hl
-BB1_2:
+BB2_2:
 	ld	hl, (ix - 3)
 	ld	sp, ix
 	pop	ix
@@ -110,17 +159,15 @@ _notify_Delete:
 	ld	a, (_notify_amount)
 	ld	e, a
 	or	a, a
-	jr	z, BB2_2
+	jr	z, BB3_2
 	dec	e
 	ld	a, e
 	ld	(_notify_amount), a
 	ld	hl, (_notify)
 	ld	(ix - 3), hl
 	ld	iy, 0
-	push	af
 	ld	a, (ix - 6)
 	ld	iyl, a
-	pop	af
 	lea	hl, iy
 	ld	bc, 42
 	call	__imulu
@@ -149,7 +196,7 @@ _notify_Delete:
 	pop	de
 	pop	de
 	ld	(_notify), hl
-BB2_2:
+BB3_2:
 	ld	sp, ix
 	pop	ix
 	jp	_notify_Save
@@ -172,47 +219,32 @@ _notify_DeleteAll:
 	section	.text,"ax",@progbits
 
 	section	.text,"ax",@progbits
-	public	_notify_CheckNotify
-_notify_CheckNotify:
-	ld	hl, -3
-	call	__frameset
-	call	_notify_Load
-	ld	a, (_notify_amount)
-	or	a, a
-	sbc	hl, hl
-	ld	l, a
-	dec	hl
-	ld	(ix - 3), hl
-	call	_notify_Save
-	ld	hl, (ix - 3)
-	ld	sp, ix
-	pop	ix
-	ret
-	section	.text,"ax",@progbits
-
-	section	.text,"ax",@progbits
 	public	_notify_Alert
 _notify_Alert:
 	ld	hl, -6
 	call	__frameset
-	scf
-	sbc	hl, hl
-	ld	(ix - 3), hl
 	call	_notify_Load
 	ld	a, (_notify_amount)
 	ld	c, a
 	or	a, a
-	jr	z, BB5_2
+	jr	nz, BB5_2
+	ld	hl, (_notify)
+	push	hl
+	call	_free
+	pop	hl
+	scf
+	sbc	hl, hl
+	jr	BB5_3
+BB5_2:
 	ld	iy, 57
 	ld	de, 15
 	dec	c
-	push	bc
-	pop	hl
-	ld	(ix - 6), hl
-	ld	bc, 0
-	ld	c, l
-	ld	(ix - 3), bc
-	push	bc
+	ld	(ix - 6), bc
+	or	a, a
+	sbc	hl, hl
+	ld	l, c
+	ld	(ix - 3), hl
+	push	hl
 	push	de
 	push	iy
 	call	_notify_Render
@@ -223,8 +255,8 @@ _notify_Alert:
 	push	hl
 	call	_notify_Delete
 	pop	hl
-BB5_2:
 	ld	hl, (ix - 3)
+BB5_3:
 	ld	sp, ix
 	pop	ix
 	ret
@@ -240,7 +272,7 @@ _notify_Render:
 	or	a, a
 	sbc	hl, de
 	call	pe, __setflag
-	jp	m, BB6_11
+	jp	m, BB6_12
 	call	_notify_Load
 	ld	iy, (_notify)
 	ld	bc, 42
@@ -371,7 +403,12 @@ BB6_4:
 	or	a, a
 	jp	z, BB6_11
 	lea	de, iy + 12
-	ld	iy, 2
+	ld	hl, 2
+	push	hl
+	pop	iy
+	ld	bc, (ix + 6)
+	push	bc
+	pop	hl
 	jp	BB6_10
 BB6_6:
 	ld	hl, 205
@@ -505,16 +542,14 @@ BB6_8:
 	ld	a, (iy + 12)
 	or	a, a
 	jr	z, BB6_11
-	ld	bc, 44
+	ld	hl, 44
 	lea	de, iy + 12
-	push	bc
+	push	hl
 	pop	iy
-BB6_10:
 	ld	bc, (ix + 6)
+	ld	hl, (ix + 9)
+BB6_10:
 	add	iy, bc
-	ld	bc, (ix + 9)
-	push	bc
-	pop	hl
 	ld	bc, 18
 	add	hl, bc
 	push	hl
@@ -525,6 +560,11 @@ BB6_10:
 	pop	hl
 	pop	hl
 BB6_11:
+	ld	hl, (_notify)
+	push	hl
+	call	_free
+	pop	hl
+BB6_12:
 	ld	sp, ix
 	pop	ix
 	ret
@@ -535,20 +575,23 @@ BB6_11:
 _oxy_FillRoundRectangle:
 	ld	hl, -24
 	call	__frameset
-	ld	de, (ix + 12)
-	ld	bc, -2
-	or	a, a
-	sbc	hl, hl
-	push	hl
-	pop	iy
-	push	af
 	ld	a, (ix + 9)
 	ld	iyl, a
-	pop	af
-	ld	(ix - 6), iy
-	ld	(ix - 3), hl
-	ld	l, (ix + 15)
-	ld	(ix - 24), hl
+	ld	de, (ix + 12)
+	ld	a, (ix + 15)
+	ld	bc, 0
+	push	bc
+	pop	hl
+	ex	de, hl
+	ld	e, iyl
+	ex	de, hl
+	ld	(ix - 6), hl
+	ld	(ix - 3), bc
+	ld	c, a
+	ld	(ix - 24), bc
+	push	bc
+	pop	hl
+	ld	bc, -2
 	add	hl, bc
 	ld	(ix - 15), hl
 	ld	bc, 1
@@ -630,7 +673,7 @@ _notify_Tray:
 _notify_Load:
 	ld	hl, -7
 	call	__frameset
-	ld	hl, _.str.7
+	ld	hl, _.str.5
 	ld	de, _.str.1
 	xor	a, a
 	ld	(ix - 1), a
@@ -720,7 +763,7 @@ _notify_Save:
 	ld	hl, -3
 	call	__frameset
 	xor	a, a
-	ld	hl, _.str.7
+	ld	hl, _.str.5
 	ld	de, _.str.2
 	ld	(_NOTIFY_VERSION_COMPARE), a
 	push	de
@@ -781,6 +824,10 @@ _notify_Save:
 	ld	hl, (ix - 3)
 	push	hl
 	call	_ti_Close
+	pop	hl
+	ld	hl, (_notify)
+	push	hl
+	call	_free
 	ld	sp, ix
 	pop	ix
 	ret
@@ -789,11 +836,11 @@ _notify_Save:
 	section	.rodata,"a",@progbits
 	private	_.str
 _.str:
-	db	"TEST", 0
+	db	"Notify Reciever", 0
 
 	section	.rodata,"a",@progbits
-	private	_.str.7
-_.str.7:
+	private	_.str.5
+_.str.5:
 	db	"NOTIFY", 0
 
 	section	.rodata,"a",@progbits
@@ -821,20 +868,23 @@ _notify:
 _.str.2:
 	db	"w", 0
 
-	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 6d9aa7a16db70f3d02ae304b08d4a03011281fef)"
-	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 6d9aa7a16db70f3d02ae304b08d4a03011281fef)"
-	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 6d9aa7a16db70f3d02ae304b08d4a03011281fef)"
+	ident	"clang version 14.0.0 (https://github.com/jacobly0/llvm-project 56af4f86925b7eebf23dae240e0a77c64066179e)"
+	ident	"clang version 14.0.0 (https://github.com/jacobly0/llvm-project 56af4f86925b7eebf23dae240e0a77c64066179e)"
+	ident	"clang version 14.0.0 (https://github.com/jacobly0/llvm-project 56af4f86925b7eebf23dae240e0a77c64066179e)"
 	extern	__Unwind_SjLj_Register
 	extern	__frameset
 	extern	_malloc
 	extern	_gfx_SetTextBGColor
 	extern	_gfx_SetTextFGColor
 	extern	_gfx_Begin
+	extern	_gfx_GetStringWidth
 	extern	_ti_Write
 	extern	_ti_Close
 	extern	_strncpy
+	extern	__ishru
 	extern	_ti_Read
 	extern	__setflag
+	extern	_gfx_FillScreen
 	extern	_gfx_VertLine
 	extern	_ti_SetArchiveStatus
 	extern	__Unwind_SjLj_Unregister
@@ -843,5 +893,7 @@ _.str.2:
 	extern	_ti_Open
 	extern	_gfx_End
 	extern	_os_GetCSC
-	extern	_realloc
 	extern	_gfx_PrintStringXY
+	extern	_realloc
+	extern	_free
+	extern	__frameset0

@@ -3,26 +3,27 @@
 	section	.text,"ax",@progbits
 	public	_main
 _main:
+	call	_notify_DeleteAll
+	ld	hl, _.str.1
+	push	hl
+	ld	hl, _.str
+	push	hl
 	ld	hl, 0
-	ld	de, _.str
-	push	de
-	push	de
 	push	hl
 	call	_notify_Create
 	pop	hl
 	pop	hl
 	pop	hl
-	call	_gfx_Begin
-	ld	hl, -32
+	ld	hl, _.str.2
 	push	hl
-	call	_gfx_SetColor
+	ld	hl, _.str
+	push	hl
+	ld	hl, _chatbox_data
+	push	hl
+	call	_notify_Create
 	pop	hl
-	call	_notify_Alert
-BB0_1:
-	call	_os_GetCSC
-	or	a, a
-	jr	z, BB0_1
-	call	_gfx_End
+	pop	hl
+	pop	hl
 	or	a, a
 	sbc	hl, hl
 	ret
@@ -117,10 +118,8 @@ _notify_Delete:
 	ld	hl, (_notify)
 	ld	(ix - 3), hl
 	ld	iy, 0
-	push	af
 	ld	a, (ix - 6)
 	ld	iyl, a
-	pop	af
 	lea	hl, iy
 	ld	bc, 42
 	call	__imulu
@@ -172,47 +171,32 @@ _notify_DeleteAll:
 	section	.text,"ax",@progbits
 
 	section	.text,"ax",@progbits
-	public	_notify_CheckNotify
-_notify_CheckNotify:
-	ld	hl, -3
-	call	__frameset
-	call	_notify_Load
-	ld	a, (_notify_amount)
-	or	a, a
-	sbc	hl, hl
-	ld	l, a
-	dec	hl
-	ld	(ix - 3), hl
-	call	_notify_Save
-	ld	hl, (ix - 3)
-	ld	sp, ix
-	pop	ix
-	ret
-	section	.text,"ax",@progbits
-
-	section	.text,"ax",@progbits
 	public	_notify_Alert
 _notify_Alert:
 	ld	hl, -6
 	call	__frameset
-	scf
-	sbc	hl, hl
-	ld	(ix - 3), hl
 	call	_notify_Load
 	ld	a, (_notify_amount)
 	ld	c, a
 	or	a, a
-	jr	z, BB5_2
+	jr	nz, BB4_2
+	ld	hl, (_notify)
+	push	hl
+	call	_free
+	pop	hl
+	scf
+	sbc	hl, hl
+	jr	BB4_3
+BB4_2:
 	ld	iy, 57
 	ld	de, 15
 	dec	c
-	push	bc
-	pop	hl
-	ld	(ix - 6), hl
-	ld	bc, 0
-	ld	c, l
-	ld	(ix - 3), bc
-	push	bc
+	ld	(ix - 6), bc
+	or	a, a
+	sbc	hl, hl
+	ld	l, c
+	ld	(ix - 3), hl
+	push	hl
 	push	de
 	push	iy
 	call	_notify_Render
@@ -223,8 +207,8 @@ _notify_Alert:
 	push	hl
 	call	_notify_Delete
 	pop	hl
-BB5_2:
 	ld	hl, (ix - 3)
+BB4_3:
 	ld	sp, ix
 	pop	ix
 	ret
@@ -240,7 +224,7 @@ _notify_Render:
 	or	a, a
 	sbc	hl, de
 	call	pe, __setflag
-	jp	m, BB6_11
+	jp	m, BB5_12
 	call	_notify_Load
 	ld	iy, (_notify)
 	ld	bc, 42
@@ -259,7 +243,7 @@ _notify_Render:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jp	nz, BB6_6
+	jp	nz, BB5_6
 	ld	hl, 165
 	ld	de, 40
 	push	de
@@ -312,7 +296,7 @@ _notify_Render:
 	add	iy, de
 	ld	a, (iy + 3)
 	or	a, a
-	jr	z, BB6_4
+	jr	z, BB5_4
 	ld	hl, (ix + 6)
 	ld	de, 2
 	add	hl, de
@@ -328,7 +312,7 @@ _notify_Render:
 	pop	hl
 	pop	hl
 	pop	hl
-BB6_4:
+BB5_4:
 	scf
 	sbc	hl, hl
 	push	hl
@@ -369,11 +353,16 @@ BB6_4:
 	add	iy, de
 	ld	a, (iy + 12)
 	or	a, a
-	jp	z, BB6_11
+	jp	z, BB5_11
 	lea	de, iy + 12
-	ld	iy, 2
-	jp	BB6_10
-BB6_6:
+	ld	hl, 2
+	push	hl
+	pop	iy
+	ld	bc, (ix + 6)
+	push	bc
+	pop	hl
+	jp	BB5_10
+BB5_6:
 	ld	hl, 205
 	ld	de, 40
 	push	de
@@ -447,7 +436,7 @@ BB6_6:
 	add	iy, de
 	ld	a, (iy + 3)
 	or	a, a
-	jr	z, BB6_8
+	jr	z, BB5_8
 	ld	de, 4
 	ld	hl, (ix + 6)
 	ld	bc, 3
@@ -463,7 +452,7 @@ BB6_6:
 	pop	hl
 	pop	hl
 	pop	hl
-BB6_8:
+BB5_8:
 	scf
 	sbc	hl, hl
 	push	hl
@@ -504,17 +493,15 @@ BB6_8:
 	add	iy, de
 	ld	a, (iy + 12)
 	or	a, a
-	jr	z, BB6_11
-	ld	bc, 44
+	jr	z, BB5_11
+	ld	hl, 44
 	lea	de, iy + 12
-	push	bc
+	push	hl
 	pop	iy
-BB6_10:
 	ld	bc, (ix + 6)
+	ld	hl, (ix + 9)
+BB5_10:
 	add	iy, bc
-	ld	bc, (ix + 9)
-	push	bc
-	pop	hl
 	ld	bc, 18
 	add	hl, bc
 	push	hl
@@ -524,7 +511,12 @@ BB6_10:
 	pop	hl
 	pop	hl
 	pop	hl
-BB6_11:
+BB5_11:
+	ld	hl, (_notify)
+	push	hl
+	call	_free
+	pop	hl
+BB5_12:
 	ld	sp, ix
 	pop	ix
 	ret
@@ -535,20 +527,23 @@ BB6_11:
 _oxy_FillRoundRectangle:
 	ld	hl, -24
 	call	__frameset
-	ld	de, (ix + 12)
-	ld	bc, -2
-	or	a, a
-	sbc	hl, hl
-	push	hl
-	pop	iy
-	push	af
 	ld	a, (ix + 9)
 	ld	iyl, a
-	pop	af
-	ld	(ix - 6), iy
-	ld	(ix - 3), hl
-	ld	l, (ix + 15)
-	ld	(ix - 24), hl
+	ld	de, (ix + 12)
+	ld	a, (ix + 15)
+	ld	bc, 0
+	push	bc
+	pop	hl
+	ex	de, hl
+	ld	e, iyl
+	ex	de, hl
+	ld	(ix - 6), hl
+	ld	(ix - 3), bc
+	ld	c, a
+	ld	(ix - 24), bc
+	push	bc
+	pop	hl
+	ld	bc, -2
 	add	hl, bc
 	ld	(ix - 15), hl
 	ld	bc, 1
@@ -560,10 +555,10 @@ _oxy_FillRoundRectangle:
 	call	pe, __setflag
 	push	de
 	pop	iy
-	jp	p, BB7_2
+	jp	p, BB6_2
 	push	bc
 	pop	iy
-BB7_2:
+BB6_2:
 	dec	de
 	ld	(ix - 21), de
 	ld	hl, (ix - 3)
@@ -574,11 +569,11 @@ BB7_2:
 	ld	hl, (ix - 6)
 	inc	hl
 	ld	(ix - 18), hl
-BB7_3:
+BB6_3:
 	lea	hl, iy
 	or	a, a
 	sbc	hl, bc
-	jr	z, BB7_9
+	jr	z, BB6_9
 	ld	(ix - 12), iy
 	ld	iy, (ix - 3)
 	add	iy, bc
@@ -588,21 +583,21 @@ BB7_3:
 	or	a, a
 	sbc	hl, bc
 	ld	(ix - 9), bc
-	jr	z, BB7_6
+	jr	z, BB6_6
 	ld	hl, (ix - 21)
 	or	a, a
 	sbc	hl, bc
-	jr	nz, BB7_7
-BB7_6:
+	jr	nz, BB6_7
+BB6_6:
 	ld	hl, (ix - 15)
 	push	hl
 	ld	hl, (ix - 18)
-	jr	BB7_8
-BB7_7:
+	jr	BB6_8
+BB6_7:
 	ld	hl, (ix - 24)
 	push	hl
 	ld	hl, (ix - 6)
-BB7_8:
+BB6_8:
 	push	hl
 	push	iy
 	call	_gfx_VertLine
@@ -612,8 +607,8 @@ BB7_8:
 	ld	bc, (ix - 9)
 	inc	bc
 	ld	iy, (ix - 12)
-	jr	BB7_3
-BB7_9:
+	jr	BB6_3
+BB6_9:
 	ld	sp, ix
 	pop	ix
 	ret
@@ -631,7 +626,7 @@ _notify_Load:
 	ld	hl, -7
 	call	__frameset
 	ld	hl, _.str.7
-	ld	de, _.str.1
+	ld	de, _.str.1.8
 	xor	a, a
 	ld	(ix - 1), a
 	push	de
@@ -641,7 +636,7 @@ _notify_Load:
 	pop	hl
 	pop	hl
 	or	a, a
-	jp	z, BB9_5
+	jp	z, BB8_5
 	ld	hl, _NOTIFY_VERSION_COMPARE
 	ld	bc, 1
 	ld	(ix - 4), de
@@ -658,10 +653,10 @@ _notify_Load:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	z, BB9_3
+	jr	z, BB8_3
 	or	a, a
-	jr	nz, BB9_5
-BB9_3:
+	jr	nz, BB8_5
+BB8_3:
 	ld	hl, _notify_amount
 	ld	de, (ix - 4)
 	push	de
@@ -688,7 +683,7 @@ BB9_3:
 	add	hl, bc
 	or	a, a
 	sbc	hl, bc
-	jr	z, BB9_5
+	jr	z, BB8_5
 	ld	a, 1
 	ld	(ix - 1), a
 	ld	de, (ix - 4)
@@ -707,7 +702,7 @@ BB9_3:
 	push	hl
 	call	_ti_Close
 	pop	hl
-BB9_5:
+BB8_5:
 	ld	a, (ix - 1)
 	ld	sp, ix
 	pop	ix
@@ -721,7 +716,7 @@ _notify_Save:
 	call	__frameset
 	xor	a, a
 	ld	hl, _.str.7
-	ld	de, _.str.2
+	ld	de, _.str.2.11
 	ld	(_NOTIFY_VERSION_COMPARE), a
 	push	de
 	push	hl
@@ -753,19 +748,19 @@ _notify_Save:
 	pop	hl
 	pop	hl
 	pop	hl
-	ld	de, (_notify)
 	ld	a, (_notify_amount)
 	or	a, a
 	sbc	hl, hl
 	ld	l, a
 	ld	bc, 42
 	call	__imulu
-	ld	bc, (ix - 3)
-	push	bc
-	ld	bc, 1
-	push	bc
-	push	hl
+	ld	de, (ix - 3)
 	push	de
+	ld	de, 1
+	push	de
+	push	hl
+	ld	hl, _notify
+	push	hl
 	call	_ti_Write
 	pop	hl
 	pop	hl
@@ -781,15 +776,40 @@ _notify_Save:
 	ld	hl, (ix - 3)
 	push	hl
 	call	_ti_Close
+	pop	hl
+	ld	hl, (_notify)
+	push	hl
+	call	_free
 	ld	sp, ix
 	pop	ix
 	ret
 	section	.text,"ax",@progbits
 
+	section	.bss,"aw",@nobits
+	public	_xlibc
+_xlibc:
+	rb	512
+
 	section	.rodata,"a",@progbits
 	private	_.str
 _.str:
-	db	"TEST", 0
+	db	"DEMOA", 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.1
+_.str.1:
+	db	"My no icon notify works!", 0
+
+	section	.data,"aw",@progbits
+	public	_chatbox_data
+_chatbox_data:
+	db	"", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "ÿÿÿÿÿÿÿÿÿÿÿÿ", 0, 0, 0, "ÿÿÿÿÿÿÿÿÿÿÿÿÿÿ", 0, 0, "ÿÿÿÿÿÿÿÿÿÿÿÿÿÿ", 0, 0, "ÿÿÿÿÿÿÿÿÿÿÿÿÿÿ", 0, 0, "ÿÿÿÿÿÿÿÿÿÿÿÿÿÿ", 0, 0, "ÿÿÿÿÿÿÿÿÿÿÿÿÿÿ", 0, 0, "ÿÿÿÿÿÿÿÿÿÿÿÿÿÿ", 0, 0, "ÿÿÿÿÿÿÿÿÿÿÿÿÿÿ", 0, 0, "ÿÿÿÿÿÿÿÿÿÿÿÿÿÿ", 0, 0, 0, "ÿÿÿÿÿÿÿÿÿÿÿÿ", 0, 0, 0, 0, 0, "ÿÿÿÿÿ", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "ÿÿÿÿ", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "ÿÿÿ", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "ÿÿ"
+	db	27 dup 0
+
+	section	.rodata,"a",@progbits
+	private	_.str.2
+_.str.2:
+	db	"My icon notify works!", 0
 
 	section	.rodata,"a",@progbits
 	private	_.str.7
@@ -797,8 +817,8 @@ _.str.7:
 	db	"NOTIFY", 0
 
 	section	.rodata,"a",@progbits
-	private	_.str.1
-_.str.1:
+	private	_.str.1.8
+_.str.1.8:
 	db	"r", 0
 
 	section	.bss,"aw",@nobits
@@ -817,19 +837,20 @@ _notify:
 	rb	3
 
 	section	.rodata,"a",@progbits
-	private	_.str.2
-_.str.2:
+	private	_.str.2.11
+_.str.2.11:
 	db	"w", 0
 
-	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 6d9aa7a16db70f3d02ae304b08d4a03011281fef)"
-	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 6d9aa7a16db70f3d02ae304b08d4a03011281fef)"
-	ident	"clang version 15.0.0 (https://github.com/jacobly0/llvm-project 6d9aa7a16db70f3d02ae304b08d4a03011281fef)"
+	ident	"clang version 14.0.0 (https://github.com/jacobly0/llvm-project 56af4f86925b7eebf23dae240e0a77c64066179e)"
+	ident	"clang version 14.0.0 (https://github.com/jacobly0/llvm-project 56af4f86925b7eebf23dae240e0a77c64066179e)"
+	ident	"clang version 14.0.0 (https://github.com/jacobly0/llvm-project 56af4f86925b7eebf23dae240e0a77c64066179e)"
+	ident	"clang version 14.0.0 (https://github.com/jacobly0/llvm-project 56af4f86925b7eebf23dae240e0a77c64066179e)"
+	ident	"clang version 14.0.0 (https://github.com/jacobly0/llvm-project 56af4f86925b7eebf23dae240e0a77c64066179e)"
 	extern	__Unwind_SjLj_Register
 	extern	__frameset
 	extern	_malloc
 	extern	_gfx_SetTextBGColor
 	extern	_gfx_SetTextFGColor
-	extern	_gfx_Begin
 	extern	_ti_Write
 	extern	_ti_Close
 	extern	_strncpy
@@ -839,9 +860,8 @@ _.str.2:
 	extern	_ti_SetArchiveStatus
 	extern	__Unwind_SjLj_Unregister
 	extern	__imulu
-	extern	_gfx_SetColor
 	extern	_ti_Open
-	extern	_gfx_End
-	extern	_os_GetCSC
-	extern	_realloc
+	extern	_gfx_SetColor
 	extern	_gfx_PrintStringXY
+	extern	_realloc
+	extern	_free

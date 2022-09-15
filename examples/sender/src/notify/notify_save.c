@@ -1,5 +1,8 @@
 #include "notify_save.h"
-#include "notify.h"
+#include "notify_core.h"
+
+// I hate including this but there seems to be a runtime bug :(
+#include <debug.h>
 
 uint8_t NOTIFY_VERSION_COMPARE;
 
@@ -16,6 +19,7 @@ bool notify_Load(void)
 
 			if (NOTIFY_VERSION_COMPARE != NOTIFY_VERSION_NUM){
 				// Error: Version does not match with current file version
+				dbg_sprintf(dbgout, "Error: Version does not match with current file version.\n");
 				return false;
 			}
 
@@ -23,6 +27,7 @@ bool notify_Load(void)
 		
 		// Read the stack size
 		ti_Read(&notify_amount, sizeof(notify_amount), 1, slot);
+		dbg_sprintf(dbgout, "The stack size is: %d\n", notify_amount);
 
 		notify = malloc(notify_amount * sizeof(struct notify_t));
 		
@@ -42,16 +47,17 @@ bool notify_Load(void)
 	} else {
 
 		// Error: There is no notify appvar.
+		dbg_sprintf(dbgout, "Error: There is no notify appvar.\n");
 		return false;
 
-	}
+	} 
 
 }
 
 void notify_Save(void)
 {
 	uint8_t slot;
-
+	
 	// Store lastest version to be compared later on.
 	NOTIFY_VERSION_COMPARE = NOTIFY_VERSION_NUM;
 
@@ -65,14 +71,14 @@ void notify_Save(void)
 	ti_Write(&notify_amount, sizeof(uint8_t), 1, slot);
 	
 	// Store the current stack
-	ti_Write(notify, notify_amount * sizeof(struct notify_t), 1, slot);
-	
-	// Free the current stack from memory
-	free(notify);
+	ti_Write(&notify, notify_amount * sizeof(struct notify_t), 1, slot);
 	
 	// Set the appvar archive status to true
 	ti_SetArchiveStatus(1, slot);
 
 	// Close Slot!
 	ti_Close(slot);
+
+	// Free the current stack from memory
+	free(notify);
 }

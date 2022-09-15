@@ -1,5 +1,8 @@
-#include "notify.h"
+#include "notify_core.h"
 #include "notify_save.h"
+
+#include <tice.h>
+#include <graphx.h>
 
 struct notify_t *notify;
 uint8_t notify_amount;
@@ -11,7 +14,9 @@ int notify_Create(gfx_sprite_t *icon, char title[9], char text[30])
 	
 	notify_Load();
 	
-	if (notify_amount < 255){
+	// Check if the amount of notificatins are less than the limit
+	if (notify_amount < NOTIFY_STACK_LIMIT) { 
+		
 		notify_amount++;
 		notify = realloc(notify, notify_amount * sizeof(struct notify_t));
 		curr_index = &notify[notify_amount - 1];
@@ -27,7 +32,8 @@ int notify_Create(gfx_sprite_t *icon, char title[9], char text[30])
 		
 		return notify_amount - 1;
 
-	}else{
+	} else {
+
 		return -1;
 	}
 	
@@ -37,14 +43,18 @@ int notify_Create(gfx_sprite_t *icon, char title[9], char text[30])
 // Deleting notifications.
 void notify_Delete(uint8_t index)
 {
+	// Need to load the notification amount
 	notify_Load();
 	
+	// Check if there is more than one notifications
 	if (notify_amount > 0){
+		// Delete the notification
 		notify_amount--;
         notify[index] = notify[notify_amount];
         notify = realloc(notify, notify_amount * sizeof(struct notify_t));
     }
 	
+	// Save the notification stack
 	notify_Save();
 }
 
@@ -60,10 +70,7 @@ void notify_DeleteAll(void)
 	notify_Save();
 }
 
-/**
- * This function renders a filled round rectangle depending on the type on "type" (read the .h file for more).
- */
- // copied from oxygen
+// copied from oxygen
 static void oxy_FillRoundRectangle(uint16_t x, uint8_t y, int w, uint8_t h, uint8_t type)
 {
 	switch (type){
@@ -110,89 +117,110 @@ static void oxy_FillRoundRectangle(uint16_t x, uint8_t y, int w, uint8_t h, uint
 }
 
 // Renders the notification on top of the stack.
-void notify_Alert(void)
+int notify_Alert(void)
 {
-	int index;
-	struct notify_t *curr_notify;
-	uint8_t xprint;
+	uint8_t index;
+	uint8_t xprint = (320 - 205)/2;
 	uint16_t yprint = 15;
-	
-	if (!notify_amount) {
-		return;
-	}else{
+
+	// Load stack so we can pull the stack information such as the size
+	notify_Load();
+
+	// The index equals to the (notification amount - 1) which equal to the top of the stack
+	if (notify_amount) {
 		index = notify_amount - 1;
+	}else{
+		free(notify);
+		return - 1;
 	}
 
+	// print in the center of the screen
+	notify_Render(xprint, yprint, index);
+
+	// once it's been displayed delete
+	notify_Delete(index);
+
+	// return which item on the stack has been display and deleted
+	return index;
+}
+
+void notify_Render(int x, int y, int index)
+{
+	struct notify_t *curr_notify;
+	uint8_t fill = 255;
+	uint8_t fg = 0;
+	uint8_t bg = 255;
+
+	if (index < 0) return;
+	
 	notify_Load();
 	
 	curr_notify = &notify[index];
-
-	gfx_SetColor(0);
-	
+		
+	// Is there a icon to display
 	if (curr_notify->icon != NULL){
-		xprint = (320 - 205)/2;
-		oxy_FillRoundRectangle(xprint, yprint, 205, 40, 0);
+		/* Print area */ 
+		oxy_FillRoundRectangle(x, y, 205, 40, 0);
 		
-		gfx_SetColor(255);
-		oxy_FillRoundRectangle(xprint, yprint + 1, 38, 38, 0);
+		/* Print Icon box */
+		gfx_SetColor(fill);
+		oxy_FillRoundRectangle(x + 2, y + 1, 38, 38, 0);
 		
-		/* place prog name here */
-		gfx_SetColor(10);
-		oxy_FillRoundRectangle(xprint + 40, yprint + 1, 163, 14, 0);
+		/* place title name here */
+		gfx_SetColor(fill);
+		oxy_FillRoundRectangle(x + 40, y + 1, 163, 14, 0);
 		
-		gfx_SetTextFGColor(255);
-		gfx_SetTextBGColor(10);
+		gfx_SetTextFGColor(fg);
+		gfx_SetTextBGColor(bg);
 	
 		if (curr_notify->title[0] != '\0'){
-			gfx_PrintStringXY(curr_notify->title, 102, 19);
+			gfx_PrintStringXY(curr_notify->title, x + 3, y + 4);
 		}
 		
 		/* place text here */ 
-		gfx_SetColor(255);
-		oxy_FillRoundRectangle(101, 31, 163, 23, 0);
+		gfx_SetColor(fill);
+		oxy_FillRoundRectangle(x + 40, y + 16, 163, 23, 0);
 		
-		gfx_SetTextFGColor(0);
-		gfx_SetTextBGColor(255);
+		gfx_SetTextFGColor(fg);
+		gfx_SetTextBGColor(bg);
 		
 		if (curr_notify->text[0] != '\0'){
-			gfx_PrintStringXY(curr_notify->text, 102, yprint + 18);
+			gfx_PrintStringXY(curr_notify->text, x + 44, y + 18);
 		}
 
-	}else{
+	}else{ //  Print notification without a icon to display.
 
-		xprint = (320 - 165)/2;
-		oxy_FillRoundRectangle(xprint, yprint, 165, 40, 0);
+		oxy_FillRoundRectangle(x, y, 165, 40, 0);
 		
-		/* place prog name here */ 
-		gfx_SetColor(10);
-		oxy_FillRoundRectangle(xprint + 1, yprint + 1, 163, 14, 0);
+		/* place title here */ 
+		gfx_SetColor(fill);
+		oxy_FillRoundRectangle(x + 1, y + 1, 163, 14, 0);
 		
-		gfx_SetTextFGColor(255);
-		gfx_SetTextBGColor(10);
+		gfx_SetTextFGColor(fg);
+		gfx_SetTextBGColor(bg);
 	
 		if (curr_notify->title[0] != '\0'){
-			gfx_PrintStringXY(curr_notify->title, xprint + 2, yprint + 3);
+			gfx_PrintStringXY(curr_notify->title, x + 2, y + 3);
 		}
 		
 		/* place text here */ 
-		gfx_SetColor(255);
-		oxy_FillRoundRectangle(xprint + 1, yprint + 16, 163, 23, 0);
+		gfx_SetColor(fill);
+		oxy_FillRoundRectangle(x + 1, y + 16, 163, 23, 0);
 		
-		gfx_SetTextFGColor(0);
-		gfx_SetTextBGColor(255);
+		gfx_SetTextFGColor(fg);
+		gfx_SetTextBGColor(bg);
 		
 		if (curr_notify->text[0] != '\0'){
-			gfx_PrintStringXY(curr_notify->text, xprint + 2, yprint + 18);
+			gfx_PrintStringXY(curr_notify->text, x + 2, x + 18);
 		}
 	}
-	
-	while (!os_GetCSC());
-	
-	notify_Delete(index);
+
+	// Free the current stack from memory without saving
+	free(notify);
 }
 
 // Displays the notification tray. 
 void notify_Tray(void)
 {
-	
+	// in the process of creating.
 }
