@@ -5,7 +5,7 @@
 #include <graphx.h>
 
 struct notify_t *notify;
-uint8_t notify_amount;
+uint8_t notify_amount = 0;
 
 // Creating notifications.
 int notify_Create(gfx_sprite_t *icon, char title[9], char text[30])
@@ -70,6 +70,19 @@ void notify_DeleteAll(void)
 	notify_Save();
 }
 
+int notify_CheckNotify(void)
+{
+	int x;
+
+	notify_Load();
+
+	x = notify_amount - 1;
+
+	notify_Save();
+
+	return x;
+}
+
 // copied from oxygen
 static void oxy_FillRoundRectangle(uint16_t x, uint8_t y, int w, uint8_t h, uint8_t type)
 {
@@ -127,17 +140,16 @@ int notify_Alert(void)
 	notify_Load();
 
 	// The index equals to the (notification amount - 1) which equal to the top of the stack
-	if (notify_amount) {
+	if (!notify_amount) {
+		return -1;
+	} else {
 		index = notify_amount - 1;
-	}else{
-		free(notify);
-		return - 1;
 	}
 
 	// print in the center of the screen
 	notify_Render(xprint, yprint, index);
 
-	// once it's been displayed delete
+	// once it's been displayed delete it from the stack
 	notify_Delete(index);
 
 	// return which item on the stack has been display and deleted
@@ -156,9 +168,9 @@ void notify_Render(int x, int y, int index)
 	notify_Load();
 	
 	curr_notify = &notify[index];
-		
+	
 	// Is there a icon to display
-	if (curr_notify->icon != NULL){
+	if (curr_notify->icon != NULL) {
 		/* Print area */ 
 		oxy_FillRoundRectangle(x, y, 205, 40, 0);
 		
@@ -188,7 +200,7 @@ void notify_Render(int x, int y, int index)
 			gfx_PrintStringXY(curr_notify->text, x + 44, y + 18);
 		}
 
-	}else{ //  Print notification without a icon to display.
+	} else { //  Print notification without a icon to display.
 
 		oxy_FillRoundRectangle(x, y, 165, 40, 0);
 		
@@ -211,12 +223,9 @@ void notify_Render(int x, int y, int index)
 		gfx_SetTextBGColor(bg);
 		
 		if (curr_notify->text[0] != '\0'){
-			gfx_PrintStringXY(curr_notify->text, x + 2, x + 18);
+			gfx_PrintStringXY(curr_notify->text, x + 2, y + 18);
 		}
 	}
-
-	// Free the current stack from memory without saving
-	free(notify);
 }
 
 // Displays the notification tray. 

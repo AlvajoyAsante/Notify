@@ -4,7 +4,7 @@
 
 NAME = DEMO
 ICON = icon.png
-DESCRIPTION = "Oxygen Demo"
+DESCRIPTION = "Notify Demo"
 COMPRESSED = YES
 ARCHIVED = NO
 

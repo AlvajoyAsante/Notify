@@ -1,5 +1,5 @@
-# test (oxygen)
+# test (notify)
 
-This test folder is used for testing and debuging oxygen. (only works for windows)
+This test folder is used for testing and debuging notify. (only works for windows)
 
 * run "test.bat" to begin testing.

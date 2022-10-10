@@ -14,9 +14,6 @@
 
 #define NOTIFY_APPVAR_NAME	"NOTIFY"
 
-/* Version Updated: 6-29-2022 */
-#define NOTIFY_VERSION_NUM  0
-
 #include <tice.h>
 #include <fileioc.h>
 #include <string.h>
@@ -24,11 +21,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
-
-/**
- * @brief Global int used to compare version numbers.
- */ 
-extern uint8_t NOTIFY_VERSION_COMPARE;
 
 /**
  * @brief Loads all the files from notify appvar

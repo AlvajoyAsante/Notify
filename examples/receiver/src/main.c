@@ -18,26 +18,20 @@ int main(void)
 {
     int index = 0;
 
-    /* Initialize graphics drawing */
     gfx_Begin();
 
-
-    // notify_Alert returns -1 if there is nothing to show index will equal to -1 and the loop ends
     while (index != -1){
         gfx_FillScreen(255);
         PrintCentered("Notify Reciever");
         
-        /* Display Notification */
         gfx_SetColor(224);
         index = notify_Alert(); 
 
-        /* Waits for a key */
         if (index != -1) {
             while (!os_GetCSC());
         }
     }
 
-    /* End graphics drawing */
     gfx_End();
 
     return 0;

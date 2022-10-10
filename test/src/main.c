@@ -13,21 +13,21 @@
 #include "notify/notify.h"
 
 #define RED_INDEX      224
-#define WHITE_INDEX    255
-#define BLACK_INDEX    0
 
 int main(void)
-{    
-    notify_Create(NULL, "TEST", "TEST");
+{   
+
+    if (notify_Create(NULL, "TEST", "TEST") == -1) goto end;
 
     gfx_Begin();
 
     gfx_SetColor(RED_INDEX);
-    notify_Alert(); 
+    if (notify_Alert() == -2) goto end; 
     
     while (!os_GetCSC());
     
-    gfx_End();
 
+end:    
+    gfx_End();
     return 0;
 }

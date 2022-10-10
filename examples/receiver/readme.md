@@ -1,5 +1,5 @@
-# Sender
+# Receiver
 
-Creates 2 notifications and stores it to notification stack.
+Renders 2 notifications and stored in notification stack.
 - Notification 1: is a notification with no icon.
 - Notification 2: is a notification with an icon.

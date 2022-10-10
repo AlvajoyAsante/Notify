@@ -9,7 +9,10 @@ title Testing: Notify
 :: Deletes the old version so it does not conflit with the new version
 echo Deleting the old version of Notify from testing folder...
 rmdir /S/Q ".\src\notify"
-make clean
+
+echo Cleaning folder directories for compiling ...
+rmdir /S/Q ".\bin"
+rmdir /S/Q ".\obj"
 
 :: Clears the screen of any infomations displayed whiles deleting the folder.
 cls
