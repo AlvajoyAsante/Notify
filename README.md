@@ -1,5 +1,7 @@
 # Notify
 
+![](https://i.imgur.com/o3FJeGx.png)
+
 > *Notify is a feature-packed notification library for the [CE C Toolchain](https://github.com/CE-Programming/toolchain); Notify allows you to communicate with other programs using notifications.*
 
 ## Getting Started
