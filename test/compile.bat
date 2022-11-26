@@ -1,13 +1,16 @@
 :: Alvajoy "Alvajoy123" Asante
-:: Last updated: 9/5/2022
+:: Last updated: 11/24/2022
 :: This compiles the API into a folder and uses it to detect bugs of any sort.
 
 @echo off
-title Testing: Notify
+
+set API_NAME = Notify
+
+title Testing: %API_NAME%
 :start
 
 :: Deletes the old version so it does not conflit with the new version
-echo Deleting the old version of Notify from testing folder...
+echo Deleting the old version of %API_NAME% from testing folder...
 rmdir /S/Q ".\src\notify"
 
 echo Cleaning folder directories for compiling ...
@@ -18,7 +21,7 @@ rmdir /S/Q ".\obj"
 cls
 
 :: Makes a folder named notify and copies all the source code into the hyra folder
-echo Copying the lastest version of Notify into testing folder...
+echo Copying the lastest version of %API_NAME% into testing folder...
 mkdir .\src\notify
 xcopy /y/s/i "..\notify" .\src\notify
 

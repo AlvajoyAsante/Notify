@@ -12,7 +12,7 @@
 
 #include "notify/notify.h"
 
-#define RED_INDEX      224
+#define RED_COLOR      224
 
 int main(void)
 {   
@@ -21,7 +21,7 @@ int main(void)
 
     gfx_Begin();
 
-    gfx_SetColor(RED_INDEX);
+    gfx_SetColor(RED_COLOR);
     if (notify_Alert() == -2) goto end; 
     
     while (!os_GetCSC());

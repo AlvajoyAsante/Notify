@@ -153,7 +153,6 @@ void notify_Render(int x, int y, int index)
 	uint8_t fill = 255;
 	uint8_t fg = 0;
 	uint8_t bg = 255;
-	bool display_icon;
 
 	if (index < 0) return;
 	
@@ -162,8 +161,7 @@ void notify_Render(int x, int y, int index)
 	curr_notify = &notify[index];
 
 	// Is there a icon to display
-	display_icon = (bool) (curr_notify->icon != NULL);
-	switch (display_icon) {
+	switch ((bool) (curr_notify->icon != NULL)) {
 		case true:
 			/* Print area */ 
 			oxy_FillRoundRectangle(x, y, 205, 40, 0);
