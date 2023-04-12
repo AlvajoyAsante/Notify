@@ -4,9 +4,15 @@
  * @brief Core Notification system
  * @version 0.1
  * @date 2023-04-12
- * 
+ *
  * @copyright Copyright (c) 2023
- * 
+ *
+ *     _/      _/    _/_/    _/_/_/_/_/  _/_/_/  _/_/_/_/  _/      _/
+ *    _/_/    _/  _/    _/      _/        _/    _/          _/  _/
+ *   _/  _/  _/  _/    _/      _/        _/    _/_/_/        _/
+ *  _/    _/_/  _/    _/      _/        _/    _/            _/
+ * _/      _/    _/_/        _/      _/_/_/  _/            _/
+ *
  * BSD 3-Clause License
  * Copyright (c) 2023, Alvajoy 'Alvajoy123' Asante.
  * All rights reserved.
@@ -40,8 +46,6 @@
 #ifndef NOTIFY_CORE_H
 #define NOTIFY_CORE_H
 
-
-
 #define NOTIFY_STACK_MAX 255
 #define NOTIFY_STACK_AMOUNT notify_amount
 
@@ -72,17 +76,17 @@ extern "C"
 
 	/**
 	 * @brief Creates a new notification.
-	 * 
+	 *
 	 * @param icon Icon of the notification
 	 * @param title Title of the notification (Name of Program).
 	 * @param text Text or dialog of the notifications.
 	 * @return struct notify_t* pointer to notify struct
 	 */
 	struct notify_t *notify_Create(gfx_sprite_t *icon, char title[9], char text[30]);
-	
+
 	/**
 	 * @brief Returns the first notification with same title name
-	 * 
+	 *
 	 * @param title title notification may contain
 	 * @return struct notify_t* pointer to notify struct
 	 */
@@ -90,12 +94,12 @@ extern "C"
 
 	/**
 	 * @brief Deletes Notification out of a stack,
-	 * 
+	 *
 	 * @param notification pointer to notify struct
 	 * @return true notification was deleted
 	 * @return false notification was not deleted
 	 */
-	bool notify_Delete(struct notify_t * notification);
+	bool notify_Delete(struct notify_t *notification);
 
 	/**
 	 * @brief This function deletes all the notification in notification stack.
@@ -109,14 +113,14 @@ extern "C"
 
 	/**
 	 * @brief Default Renders a notification
-	 * 
-	 * @param notification 
+	 *
+	 * @param notification
 	 * @param x X position
 	 * @param y Y position
 	 * @return true Notification was rendered
-	 * @return false Notification was not rendered 
+	 * @return false Notification was not rendered
 	 */
-	bool notify_Render(struct notify_t * notification, int x, int y);
+	bool notify_Render(struct notify_t *notification, int x, int y);
 
 	/**
 	 * @brief Renders all the notification in a tray.
