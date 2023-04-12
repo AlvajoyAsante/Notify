@@ -5,10 +5,9 @@
 #include <graphx.h>
 
 /* The core of notification system */
-#include "notify_core.h"
+#include "core.h"
 
 /* The saving system of the stack */
-#include "notify_save.h"
-
+#include "save.h"
 
 #endif /* __NOTIFY_CORE_H__ */

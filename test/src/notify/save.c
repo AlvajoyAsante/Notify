@@ -1,5 +1,5 @@
-#include "notify_save.h"
-#include "notify_core.h"
+#include "save.h"
+#include "core.h"
 
 // I hate including this but there seems to be a runtime bug :(
 #include <debug.h>

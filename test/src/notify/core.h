@@ -12,10 +12,13 @@
 #ifndef NOTIFY_CORE_H
 #define NOTIFY_CORE_H
 
+
+
+#define NOTIFY_STACK_MAX 255
+#define NOTIFY_STACK_AMOUNT notify_amount
+
 #include <tice.h>
 #include <graphx.h>
-
-#define NOTIFY_STACK_LIMIT 255
 
 #ifdef __cplusplus
 extern "C"
@@ -37,7 +40,7 @@ extern "C"
 	/**
 	 * @brief This holds the amount of notifications in the stack
 	 */
-	extern uint8_t notify_amount;
+	static uint8_t notify_amount;
 
 	/**
 	 * Creates a new notification.
@@ -45,32 +48,31 @@ extern "C"
 	 * @param title Title of the notification (Name of Program).
 	 * @param text Text or dialog of the notifications.
 	 */
-	int notify_Create(gfx_sprite_t *icon, char title[9], char text[30]);
+	struct notify_t *notify_Create(gfx_sprite_t *icon, char title[9], char text[30]);
 
 	/**
 	 * @brief Deletes Notification out of a stack,
 	 * @param index index in stack.
 	 */
-	void notify_Delete(uint8_t index);
+	bool notify_Delete(struct notify_t * notification);
 
 	/**
 	 * @brief This function deletes all the notification in notification stack.
 	 */
-	void notify_DeleteAll(void);
+	bool notify_DeleteAll(void);
 
 	/**
-	 * @brief Renders notification at the top of the notification stack.
+	 * @brief Returns notification at the top of the notification stack.
 	 */
-	int notify_Alert(void);
+	bool notify_Alert(void);
 
 	/**
 	 * @brief Renders a notification based on stack index
-	 * @note
+	 * 
 	 * @param  x: X position
 	 * @param  y: Y position
-	 * @param  index: Index where the notification is located in the stack
 	 */
-	void notify_Render(int x, int y, int index);
+	bool notify_Render(struct notify_t * notification, int x, int y);
 
 	/**
 	 * @brief Renders all the notification in a tray.

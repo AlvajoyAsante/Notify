@@ -2,7 +2,7 @@
 # Makefile Options
 # ----------------------------
 
-NAME = DEMO
+NAME = TEST
 ICON = icon.png
 DESCRIPTION = "Notify Demo"
 COMPRESSED = YES

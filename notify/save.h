@@ -1,7 +1,7 @@
 /**
  * @file save.h
  * @author Alvajoy 'Alvajoy123' Asante
- * @brief Notification File Linker 
+ * @brief Saving Notification system
  * @version 0.1
  * @date 2023-04-12
  * 
@@ -37,16 +37,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef NOTIFY_H
-#define NOTIFY_H
+#ifndef NOTIFY_SAVE_H
+#define NOTIFY_SAVE_H
+
+#define NOTIFY_APPVAR_NAME "NOTIFY"
 
 #include <tice.h>
-#include <graphx.h>
+#include <fileioc.h>
+#include <string.h>
 
-/* The core of notification system */
-#include "core.h"
+#ifdef __cplusplus
+extern "C"
+{
+#endif /* __cplusplus */
 
-/* The saving system of the stack */
-#include "save.h"
+    /**
+     * @brief Loads notification data.
+     */
+    bool notify_Load(void);
 
-#endif /* __NOTIFY_CORE_H__ */
+    /**
+     * @brief Saves notification data.
+     */
+    void notify_Save(void);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
+#endif
