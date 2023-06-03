@@ -24,4 +24,4 @@ If you don't get a response on the Discord Server, you can ask your questions on
 
 
 ------------
- Copyright &copy; 2022, ***Alvajoy123***
+ Copyright &copy; 2022, ***Alvajoy Asante***
